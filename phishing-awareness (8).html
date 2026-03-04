@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign in – Google Accounts</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600&family=Roboto:wght@300;400;500&family=DM+Sans:wght@600;700;800&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Roboto', sans-serif; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #fff; transition: background 0.5s; }
+  .google-page { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; width: 100%; background: #fff; padding: 20px; }
+  .google-logo { font-size: 44px; font-family: 'Product Sans','Google Sans',sans-serif; font-weight: 400; letter-spacing: -1px; margin-bottom: 28px; user-select: none; }
+  .g-blue{color:#4285f4}.g-red{color:#ea4335}.g-yellow{color:#fbbc05}.g-green{color:#34a853}
+  .card { border: 1px solid #dadce0; border-radius: 8px; padding: 40px 40px 30px; width: 100%; max-width: 450px; text-align: center; }
+  .card h2 { font-family: 'Google Sans',sans-serif; font-size: 24px; font-weight: 400; color: #202124; margin-bottom: 8px; }
+  .card .subtitle { font-size: 16px; color: #202124; margin-bottom: 30px; }
+  .avatar-row { display: flex; align-items: center; gap: 12px; background: #f1f3f4; border-radius: 24px; padding: 8px 16px 8px 8px; margin: 0 auto 28px; width: fit-content; cursor: pointer; font-size: 14px; color: #202124; }
+  .avatar { width: 32px; height: 32px; border-radius: 50%; background: #4285f4; color: white; font-size: 14px; font-weight: 500; display: flex; align-items: center; justify-content: center; font-family: 'Google Sans',sans-serif; }
+  .input-wrap { position: relative; margin-bottom: 8px; }
+  .input-wrap input { width: 100%; padding: 16px 50px 6px 14px; border: 1px solid #dadce0; border-radius: 4px; font-size: 16px; font-family: 'Roboto',sans-serif; color: #202124; outline: none; background: transparent; transition: border-color 0.2s; }
+  .input-wrap input:focus { border-color: #1a73e8; border-width: 2px; }
+  .input-wrap label { position: absolute; top: 50%; left: 14px; transform: translateY(-50%); font-size: 16px; color: #5f6368; pointer-events: none; transition: all 0.15s ease; background: #fff; padding: 0 2px; }
+  .input-wrap input:focus + label, .input-wrap.has-value label { top: 0px; font-size: 12px; color: #1a73e8; }
+  .input-wrap input:not(:focus) + label { color: #5f6368; }
+  .helper-text { font-size: 12px; color: #5f6368; text-align: left; margin-bottom: 24px; margin-top: 4px; }
+  .forgot-link { font-size: 14px; color: #1a73e8; text-decoration: none; font-weight: 500; display: block; text-align: left; margin-bottom: 28px; cursor: pointer; }
+  .forgot-link:hover { text-decoration: underline; }
+  .btn-row { display: flex; justify-content: space-between; align-items: center; }
+  .btn-text { font-size: 14px; color: #1a73e8; font-weight: 500; background: none; border: none; cursor: pointer; font-family: 'Roboto',sans-serif; padding: 8px 6px; border-radius: 4px; }
+  .btn-text:hover { background: #e8f0fe; }
+  .btn-next { background: #1a73e8; color: #fff; border: none; border-radius: 4px; padding: 10px 24px; font-size: 14px; font-family: 'Google Sans',sans-serif; font-weight: 500; cursor: pointer; transition: background 0.2s, box-shadow 0.2s; }
+  .btn-next:hover { background: #1765cc; box-shadow: 0 2px 6px rgba(26,115,232,0.3); }
+  .divider { border: none; border-top: 1px solid #e0e0e0; margin: 28px -40px; }
+  .footer-links { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; font-size: 12px; color: #5f6368; margin-top: 4px; }
+  .footer-links a { color: #5f6368; text-decoration: none; }
+  .footer-links a:hover { text-decoration: underline; }
+  .lang-select { display: flex; align-items: center; gap: 6px; font-size: 13px; color: #5f6368; margin-top: 20px; cursor: pointer; }
+  .pw-toggle { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #1a73e8; font-size: 13px; padding: 4px 6px; font-family: 'Roboto',sans-serif; font-weight: 500; }
+
+  /* Stages */
+  .stage { display: none; }
+  .stage.active { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; width: 100%; animation: fadeIn 0.3s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* Caught screen */
+  #stage-caught { background: #1a1a2e; padding: 24px 20px; flex-direction: column; gap: 0; }
+  .edu-banner { background: linear-gradient(135deg,#ff4d4d,#c0392b); color: #fff; text-align: center; padding: 14px 24px; width: 100%; max-width: 960px; border-radius: 12px 12px 0 0; font-family: 'DM Sans',sans-serif; font-size: 14px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 10px; flex-shrink: 0; }
+  .wrapper { display: flex; gap: 32px; align-items: flex-start; max-width: 960px; width: 100%; background: #f1f3f4; border-radius: 0 0 12px 12px; padding: 32px; box-shadow: 0 30px 80px rgba(0,0,0,0.5); }
+  .browser { flex: 1; min-width: 0; border-radius: 10px; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.22); background: #fff; }
+  .browser-bar { background: #3c4043; padding: 10px 14px; display: flex; align-items: center; gap: 10px; }
+  .dots { display: flex; gap: 6px; }
+  .dot { width: 12px; height: 12px; border-radius: 50%; }
+  .dot-r{background:#ff5f57}.dot-y{background:#ffbd2e}.dot-g{background:#28c840}
+  .url-bar { flex: 1; background: #202124; border-radius: 20px; padding: 6px 14px; font-size: 12px; color: #ff8a80; font-family: monospace; display: flex; align-items: center; gap: 6px; border: 2px solid #ff4444; position: relative; }
+  .url-text .red { color: #ff4444; font-weight: bold; }
+  .url-callout { position: absolute; top: 36px; left: 14px; background: #ff4444; color: white; font-size: 10px; font-family: 'DM Sans',sans-serif; font-weight: 700; padding: 4px 9px; border-radius: 4px; white-space: nowrap; z-index: 10; }
+  .url-callout::before { content:''; position: absolute; top: -5px; left: 14px; border-left: 5px solid transparent; border-right: 5px solid transparent; border-bottom: 5px solid #ff4444; }
+  .page-content { padding: 32px 24px; display: flex; flex-direction: column; align-items: center; }
+  .stolen-alert { background: #fff3f3; border: 2px solid #ff4444; border-radius: 8px; padding: 14px 18px; width: 100%; max-width: 360px; margin-bottom: 16px; text-align: left; }
+  .stolen-alert .sa-title { font-family: 'DM Sans',sans-serif; font-weight: 700; font-size: 13px; color: #c0392b; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+  .stolen-alert .cred-row { font-size: 12px; color: #444; font-family: monospace; background: #ffe5e5; padding: 6px 10px; border-radius: 4px; margin-top: 6px; }
+  .stolen-alert .cred-row span { color: #c0392b; font-weight: bold; }
+  .card-reveal { background: #fff; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.12); padding: 22px 28px 18px; width: 100%; max-width: 360px; text-align: center; opacity: 0.55; position: relative; filter: blur(1px); }
+  .card-reveal::after { content:'🔴 DATA SENT TO ATTACKER'; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: 'DM Sans',sans-serif; font-weight: 800; font-size: 13px; color: #c0392b; background: rgba(255,255,255,0.6); border-radius: 8px; letter-spacing: 0.05em; }
+  .annotations { width: 260px; flex-shrink: 0; display: flex; flex-direction: column; gap: 14px; }
+  .ann-title { font-family: 'DM Sans',sans-serif; font-weight: 700; font-size: 15px; color: #1a1a2e; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+  .flag { background: #fff; border-left: 4px solid #ff4444; border-radius: 6px; padding: 12px 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); animation: slideIn 0.4s ease both; }
+  .flag:nth-child(2){animation-delay:.1s}.flag:nth-child(3){animation-delay:.2s}.flag:nth-child(4){animation-delay:.3s}.flag:nth-child(5){animation-delay:.4s}.flag:nth-child(6){animation-delay:.5s}
+  @keyframes slideIn { from { opacity:0; transform: translateX(20px); } to { opacity:1; transform: translateX(0); } }
+  .flag-num { background: #ff4444; color: #fff; font-family: 'DM Sans',sans-serif; font-weight: 700; font-size: 11px; border-radius: 50%; width: 20px; height: 20px; display: inline-flex; align-items: center; justify-content: center; margin-right: 8px; flex-shrink: 0; }
+  .flag-head { display: flex; align-items: center; font-family: 'DM Sans',sans-serif; font-weight: 700; font-size: 13px; color: #c0392b; margin-bottom: 5px; }
+  .flag p { font-size: 12px; color: #444; line-height: 1.5; }
+  .flag .example { font-family: monospace; font-size: 11px; background: #fff3f3; border-radius: 3px; padding: 3px 6px; color: #c0392b; display: inline-block; margin-top: 4px; }
+  .footer-note { max-width: 960px; width: 100%; text-align: center; color: #8888aa; font-size: 12px; margin-top: 16px; font-family: 'DM Sans',sans-serif; flex-shrink: 0; }
+  .try-again-btn { margin-top: 18px; background: none; border: 1px solid #8888aa; color: #aaa; border-radius: 6px; padding: 8px 20px; font-family: 'DM Sans',sans-serif; font-size: 13px; cursor: pointer; transition: all 0.2s; }
+  .try-again-btn:hover { border-color: #fff; color: #fff; }
+  .flash { position: fixed; inset: 0; background: #ff4444; pointer-events: none; opacity: 0; z-index: 9999; animation: flash 0.6s ease forwards; }
+  @keyframes flash { 0%{opacity:0} 20%{opacity:0.7} 100%{opacity:0} }
+  @media(max-width:700px){ .wrapper{flex-direction:column;padding:20px} .annotations{width:100%} }
+</style>
+</head>
+<body>
+
+<!-- STAGE 1: Email -->
+<div id="stage-email" class="stage active">
+  <div class="google-page">
+    <div class="google-logo">
+      <span class="g-blue">G</span><span class="g-red">o</span><span class="g-yellow">o</span><span class="g-blue">g</span><span class="g-green">l</span><span class="g-red">e</span>
+    </div>
+    <div class="card">
+      <h2>Sign in</h2>
+      <p class="subtitle">Use your Google Account</p>
+      <div class="input-wrap" id="email-wrap">
+        <input type="email" id="email-input" placeholder=" " autocomplete="off">
+        <label for="email-input">Email or phone</label>
+      </div>
+      <p class="helper-text">Not your computer? Use a Private Window to sign in. <a href="#" style="color:#1a73e8" onclick="return false">Learn more</a></p>
+      <div class="btn-row">
+        <button class="btn-text" onclick="return false">Create account</button>
+        <button class="btn-next" onclick="goToPassword()">Next</button>
+      </div>
+      <hr class="divider">
+      <div class="footer-links">
+        <a href="#" onclick="return false">Help</a>
+        <a href="#" onclick="return false">Privacy</a>
+        <a href="#" onclick="return false">Terms</a>
+      </div>
+    </div>
+    <div class="lang-select"><span>🌐</span> English (United States) <span style="font-size:10px">▼</span></div>
+  </div>
+</div>
+
+<!-- STAGE 2: Password -->
+<div id="stage-password" class="stage">
+  <div class="google-page">
+    <div class="google-logo">
+      <span class="g-blue">G</span><span class="g-red">o</span><span class="g-yellow">o</span><span class="g-blue">g</span><span class="g-green">l</span><span class="g-red">e</span>
+    </div>
+    <div class="card">
+      <h2>Welcome</h2>
+      <div class="avatar-row" onclick="return false">
+        <div class="avatar" id="avatar-letter">?</div>
+        <span id="display-email">user@example.com</span>
+        <span style="color:#5f6368;font-size:12px;margin-left:4px">▼</span>
+      </div>
+      <div class="input-wrap" id="pw-wrap">
+        <input type="password" id="pw-input" placeholder=" " autocomplete="off">
+        <label for="pw-input">Enter your password</label>
+        <button class="pw-toggle" onclick="togglePw()" id="pw-toggle-btn">Show</button>
+      </div>
+      <a href="#" class="forgot-link" onclick="return false">Forgot password?</a>
+      <div class="btn-row">
+        <button class="btn-text" onclick="return false">Try another way</button>
+        <button class="btn-next" onclick="submitPassword()">Next</button>
+      </div>
+      <hr class="divider">
+      <div class="footer-links">
+        <a href="#" onclick="return false">Help</a>
+        <a href="#" onclick="return false">Privacy</a>
+        <a href="#" onclick="return false">Terms</a>
+      </div>
+    </div>
+    <div class="lang-select"><span>🌐</span> English (United States) <span style="font-size:10px">▼</span></div>
+  </div>
+</div>
+
+<!-- STAGE 3: Caught -->
+<div id="stage-caught" class="stage">
+  <div class="edu-banner">
+    <span>⚠️</span> EDUCATIONAL DEMO — Simulated phishing page for security awareness training <span>⚠️</span>
+  </div>
+  <div class="wrapper">
+    <div class="browser">
+      <div class="browser-bar">
+        <div class="dots">
+          <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+        </div>
+        <div class="url-bar">
+          <span style="color:#ff6b6b;font-size:11px">🔓</span>
+          <span class="url-text">http://<span class="red">go0gle-secure-login.com</span>/accounts/signin</span>
+          <div class="url-callout">⚠ Red Flag #1: Fake domain!</div>
+        </div>
+      </div>
+      <div class="page-content">
+        <div class="google-logo" style="font-size:30px;margin-bottom:14px">
+          <span class="g-blue">G</span><span class="g-red">o</span><span class="g-yellow">o</span><span class="g-blue">g</span><span class="g-green">l</span><span class="g-red">e</span>
+        </div>
+        <div class="stolen-alert">
+          <div class="sa-title">🚨 Your credentials were just "sent"</div>
+          <div class="cred-row">Email: <span id="reveal-email">—</span></div>
+          <div class="cred-row">Password: <span id="reveal-pw">—</span></div>
+          <div style="font-size:11px;color:#888;margin-top:8px">In a real attack, these are now in the attacker's database.</div>
+        </div>
+        <div class="card-reveal">
+          <h2 style="font-family:'Google Sans',sans-serif;font-size:20px;color:#202124;margin-bottom:6px">Welcome</h2>
+          <div class="avatar-row" style="margin:0 auto 16px;pointer-events:none">
+            <div class="avatar" id="reveal-avatar">?</div>
+            <span id="reveal-email2" style="font-size:13px">—</span>
+          </div>
+          <div style="border:1px solid #dadce0;border-radius:4px;padding:14px;font-size:14px;color:#aaa;text-align:left;">••••••••••</div>
+        </div>
+      </div>
+    </div>
+    <div class="annotations">
+      <div class="ann-title">🚩 Red Flags</div>
+      <div class="flag">
+        <div class="flag-head"><span class="flag-num">1</span> Fake Domain Name</div>
+        <p>The URL isn't <strong>google.com</strong>. Attackers swap letters to trick you.</p>
+        <span class="example">go<strong>0</strong>gle-secure-login.com</span>
+      </div>
+      <div class="flag">
+        <div class="flag-head"><span class="flag-num">2</span> No HTTPS / Padlock</div>
+        <p>Real Google always shows a 🔒 padlock. An open lock or <code>http://</code> means no encryption.</p>
+      </div>
+      <div class="flag">
+        <div class="flag-head"><span class="flag-num">3</span> Arrived Via Suspicious Link</div>
+        <p>Phishing pages are reached through emails or texts — never by typing google.com yourself.</p>
+      </div>
+      <div class="flag">
+        <div class="flag-head"><span class="flag-num">4</span> Identical-Looking Page</div>
+        <p>The design is copied pixel-perfect from the real site. Appearance alone means nothing.</p>
+      </div>
+      <div class="flag">
+        <div class="flag-head"><span class="flag-num">5</span> Credentials Stolen</div>
+        <p>Clicking "Next" silently sent your email &amp; password to an attacker's server.</p>
+      </div>
+    </div>
+  </div>
+  <button class="try-again-btn" onclick="resetDemo()">↺ Reset demo</button>
+  <div class="footer-note" style="margin-top:12px">
+    🛡️ Always check the URL before typing &nbsp;•&nbsp; Navigate manually instead of clicking links &nbsp;•&nbsp; Enable two-factor authentication
+  </div>
+</div>
+
+<script>
+  const emailInput = document.getElementById('email-input');
+  const pwInput    = document.getElementById('pw-input');
+
+  emailInput.addEventListener('input', () => {
+    document.getElementById('email-wrap').classList.toggle('has-value', emailInput.value.length > 0);
+  });
+  pwInput.addEventListener('input', () => {
+    document.getElementById('pw-wrap').classList.toggle('has-value', pwInput.value.length > 0);
+  });
+
+  emailInput.addEventListener('keydown', e => { if (e.key === 'Enter') goToPassword(); });
+  pwInput.addEventListener('keydown',    e => { if (e.key === 'Enter') submitPassword(); });
+
+  function goToPassword() {
+    const email = emailInput.value.trim() || 'user@gmail.com';
+    document.getElementById('display-email').textContent = email;
+    document.getElementById('avatar-letter').textContent = email[0].toUpperCase();
+    showStage('stage-password');
+    setTimeout(() => pwInput.focus(), 350);
+  }
+
+  function togglePw() {
+    const btn = document.getElementById('pw-toggle-btn');
+    if (pwInput.type === 'password') { pwInput.type = 'text'; btn.textContent = 'Hide'; }
+    else { pwInput.type = 'password'; btn.textContent = 'Show'; }
+  }
+
+  function submitPassword() {
+    const pw = pwInput.value;
+    if (!pw) { pwInput.focus(); return; }
+    const email = document.getElementById('display-email').textContent;
+    document.getElementById('reveal-email').textContent  = email;
+    document.getElementById('reveal-email2').textContent = email;
+    document.getElementById('reveal-pw').textContent     = pw;
+    document.getElementById('reveal-avatar').textContent = email[0].toUpperCase();
+    const flash = document.createElement('div');
+    flash.className = 'flash';
+    document.body.appendChild(flash);
+    setTimeout(() => { flash.remove(); showStage('stage-caught'); }, 400);
+  }
+
+  function showStage(id) {
+    document.querySelectorAll('.stage').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    document.body.style.background = id === 'stage-caught' ? '#1a1a2e' : '#fff';
+  }
+
+  function resetDemo() {
+    emailInput.value = ''; pwInput.value = '';
+    pwInput.type = 'password';
+    document.getElementById('pw-toggle-btn').textContent = 'Show';
+    document.getElementById('email-wrap').classList.remove('has-value');
+    document.getElementById('pw-wrap').classList.remove('has-value');
+    showStage('stage-email');
+    setTimeout(() => emailInput.focus(), 300);
+  }
+</script>
+</body>
+</html>
