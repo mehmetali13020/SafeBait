@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Safebait Dashboard | CEO Paneli</title>
+    <!-- Premium Font (Inter) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Icons (FontAwesome) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <div class="app-container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="logo-area" style="justify-content: center; margin-bottom: 40px; margin-top: 10px;">
+                <img src="assets/logo.png" alt="SafeBait Logo" style="max-width: 180px; height: auto;">
+            </div>
+            <ul class="nav-links">
+                <li><a href="#" class="active"><i class="fa-solid fa-chart-pie"></i> Dashboard</a></li>
+                <li><a href="#"><i class="fa-solid fa-users"></i> Çalışanlar</a></li>
+                <li><a href="#"><i class="fa-solid fa-envelope-open-text"></i> Kampanyalar</a></li>
+                <li><a href="warning.html" target="_blank"><i class="fa-solid fa-triangle-exclamation"></i> Kurban
+                        Sayfası (Test)</a></li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header>
+                <div>
+                    <h1>Yönetici Paneli (CEO View)</h1>
+                    <p style="color: var(--text-muted); font-size: 14px; margin-top: 4px;">Şirket genelindeki siber
+                        güvenlik farkındalığı istatistikleri</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn"><i class="fa-solid fa-plus" style="margin-right: 6px;"></i> Yeni Kampanya
+                        Başlat</button>
+                </div>
+            </header>
+
+            <div class="dashboard-grid">
+                <!-- Stat Cards -->
+                <div class="stat-cards">
+                    <div class="card">
+                        <div class="stat-title">Toplam Oltalama (Phishing) Hedefi</div>
+                        <div class="stat-value" id="statTotalTargets">0</div>
+                        <div class="stat-change change-positive"><i class="fa-solid fa-arrow-up"></i> Tüm departmanlar
+                            dahil</div>
+                    </div>
+                    <div class="card">
+                        <div class="stat-title">Tıklayan Kullanıcı Oranı</div>
+                        <div class="stat-value" id="statClickRate">0%</div>
+                        <div class="stat-change change-negative"><i class="fa-solid fa-arrow-down"></i> Kritik seviye
+                            uyarısı</div>
+                    </div>
+                    <div class="card">
+                        <div class="stat-title">En Zayıf Departman</div>
+                        <div class="stat-value" id="statWeakestDept">-</div>
+                        <div class="stat-change change-negative"><i class="fa-solid fa-circle-exclamation"></i> Acil
+                            eğitim gerekli</div>
+                    </div>
+                    <div class="card">
+                        <div class="stat-title">Eğitimi Tamamlayanlar</div>
+                        <div class="stat-value" id="statEduCompleted">0%</div>
+                        <div class="stat-change change-positive"><i class="fa-solid fa-arrow-up"></i> Geçen haftaya göre
+                            +12%</div>
+                    </div>
+                </div>
+
+                <!-- Charts -->
+                <div class="card chart-card-large">
+                    <div class="card-header">
+                        <span>Kampanya Tıklanma Zaman Çizelgesi (Timeline)</span>
+                        <i class="fa-solid fa-chart-line" style="color: var(--text-muted);"></i>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="timelineChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="card chart-card-small">
+                    <div class="card-header">
+                        <span>Zafiyet Oranı (Tıklama Durumu)</span>
+                        <i class="fa-solid fa-chart-pie" style="color: var(--text-muted);"></i>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="pieChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="card chart-card-small">
+                    <div class="card-header">
+                        <span>Departmana Göre Zafiyet</span>
+                        <i class="fa-solid fa-chart-bar" style="color: var(--text-muted);"></i>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="barChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="card chart-card-large" style="grid-column: span 8;">
+                    <div class="card-header">
+                        <span>Platformlara Göre Cihaz Kullanımı</span>
+                        <i class="fa-solid fa-laptop-mobile" style="color: var(--text-muted);"></i>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="deviceChart"></canvas>
+                    </div>
+                </div>
+
+
+                <!-- Target List Table -->
+                <div class="card table-card">
+                    <div class="card-header">
+                        <span>Son Etkileşimler (Hedef Çalışanlar)</span>
+                    </div>
+                    <div style="overflow-x: auto;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Çalışan Adı</th>
+                                    <th>Departman</th>
+                                    <th>Kampanya Tarihi</th>
+                                    <th>Cihaz/Tarayıcı</th>
+                                    <th>Durum</th>
+                                </tr>
+                            </thead>
+                            <tbody id="targetTableBody">
+                                <!-- JS ile doldurulacak -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Custom Logic -->
+    <script src="js/dashboard.js"></script>
+</body>
+
+</html>
