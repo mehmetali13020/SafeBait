@@ -1,0 +1,26 @@
+Safebait Dashboard Implementation Plan (Vanilla):
+A premium-feeling phishing simulator dashboard built with pure HTML, CSS, and JS.
+Proposed Changes
+Core Pages
+  index.html
+    The main CEO Dashboard view containing the sidebar, summary cards, and charts area. Imports Chart.js via CDN.
+
+  warning.html
+    A professionally styled warning page that displays educational information to users who "clicked" the phishing link.
+
+Styles
+  css/style.css
+    Contains global typography (Inter font), a sleek dark mode theme, CSS variables for colors, and fully responsive grid layouts for both pages.
+
+Data & Logic
+  js/mock-data.js
+    Contains all mock employee targets (names, departments, status) and campaign statistics to power the dashboard visuals.
+
+  js/dashboard.js
+    Handles the Chart.js initialization (Pie Chart for click-through rates, Bar Chart for department vulnerabilities, 
+Line chart for timeline), calculation of metrics from the mock data, and DOM updates.
+
+Verification Plan
+  Manual Verification
+    Open index.html in the browser and verify premium CSS styling, responsive layout, and correct Chart.js rendering.
+    Open warning.html and verify its educational impact and aesthetics.
