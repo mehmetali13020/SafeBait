@@ -1,14 +1,14 @@
-// Hardcoded Dashboard Verileri
+// Hardcoded Dashboard Data
 const dashboardData = {
     targets: [
-        { id: 1, name: "Ahmet Yılmaz", department: "İnsan Kaynakları", date: "2023-11-20 09:15", device: "Chrome / Windows", status: "clicked" },
-        { id: 2, name: "Ayşe Kaya", department: "Muhasebe", date: "2023-11-20 09:12", device: "Safari / macOS", status: "safe" },
-        { id: 3, name: "Mehmet Demir", department: "Satış", date: "2023-11-20 09:30", device: "Edge / Windows", status: "clicked" },
-        { id: 4, name: "Zeynep Çelik", department: "Pazarlama", date: "2023-11-20 10:05", device: "Chrome / Android", status: "clicked" },
-        { id: 5, name: "Ali Veli", department: "İnsan Kaynakları", date: "2023-11-20 10:15", device: "Firefox / Linux", status: "sent" },
+        { id: 1, name: "Ahmet Yılmaz", department: "Human Resources", date: "2023-11-20 09:15", device: "Chrome / Windows", status: "clicked" },
+        { id: 2, name: "Ayşe Kaya", department: "Accounting", date: "2023-11-20 09:12", device: "Safari / macOS", status: "safe" },
+        { id: 3, name: "Mehmet Demir", department: "Sales", date: "2023-11-20 09:30", device: "Edge / Windows", status: "clicked" },
+        { id: 4, name: "Zeynep Çelik", department: "Marketing", date: "2023-11-20 10:05", device: "Chrome / Android", status: "clicked" },
+        { id: 5, name: "Ali Veli", department: "Human Resources", date: "2023-11-20 10:15", device: "Firefox / Linux", status: "sent" },
         { id: 6, name: "Fatma Şahin", department: "IT", date: "2023-11-20 09:05", device: "Chrome / Windows", status: "safe" },
-        { id: 7, name: "Caner Aydın", department: "Pazarlama", date: "2023-11-20 11:20", device: "Safari / iOS", status: "clicked" },
-        { id: 8, name: "Elif Öz", department: "Satış", date: "2023-11-20 11:45", device: "Chrome / Windows", status: "safe" }
+        { id: 7, name: "Caner Aydın", department: "Marketing", date: "2023-11-20 11:20", device: "Safari / iOS", status: "clicked" },
+        { id: 8, name: "Elif Öz", department: "Sales", date: "2023-11-20 11:45", device: "Chrome / Windows", status: "safe" }
     ],
     stats: {
         totalTargets: 154,
@@ -19,7 +19,7 @@ const dashboardData = {
             clicks: [5, 15, 25, 40, 50, 62, 68]
         },
         deptVulnerability: {
-            labels: ["Satış", "Pazarlama", "İnsan Kaynakları", "Muhasebe", "IT"],
+            labels: ["Sales", "Marketing", "Human Resources", "Accounting", "IT"],
             data: [45, 60, 30, 15, 5] // percentage of failures
         },
         deviceData: {
@@ -29,11 +29,11 @@ const dashboardData = {
     }
 };
 
-// Ortak Chart.js ayarları (Koyu tema uyumu için)
+// Common Chart.js settings (for dark theme support)
 Chart.defaults.color = '#94a3b8';
 Chart.defaults.font.family = "'Inter', sans-serif";
 
-// Dashboard Başlatıcı
+// Dashboard Initializer
 document.addEventListener('DOMContentLoaded', () => {
     initSummaryStats();
     initPieChart();
@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initTable();
 });
 
-// 1. Özet İstatistikleri Doldur
+// 1. Fill Summary Stats
 function initSummaryStats() {
     const stats = dashboardData.stats;
     const clickRate = Math.round((stats.clickedCount / stats.totalTargets) * 100);
@@ -52,12 +52,12 @@ function initSummaryStats() {
     document.getElementById('statClickRate').innerText = `%${clickRate}`;
     document.getElementById('statEduCompleted').innerText = `%${stats.eduCompleted}`;
 
-    // En zayıf departmanı bul
+    // Find the weakest department
     const maxVulnIndex = stats.deptVulnerability.data.indexOf(Math.max(...stats.deptVulnerability.data));
     document.getElementById('statWeakestDept').innerText = stats.deptVulnerability.labels[maxVulnIndex];
 }
 
-// 2. Pasta Grafik (Tıklama Oranı - Zafiyet)
+// 2. Pie Chart (Click Rate - Vulnerability)
 function initPieChart() {
     const ctx = document.getElementById('pieChart').getContext('2d');
     const stats = dashboardData.stats;
@@ -66,12 +66,12 @@ function initPieChart() {
     new Chart(ctx, {
         type: 'doughnut',
         data: {
-            labels: ['Oltalama Linkine Tıklayanlar', 'Güvende Olanlar'],
+            labels: ['Clicked Phishing Link', 'Safe'],
             datasets: [{
                 data: [stats.clickedCount, safeCount],
                 backgroundColor: [
-                    'rgba(239, 68, 68, 0.8)', // Kırmızı
-                    'rgba(16, 185, 129, 0.8)' // Yeşil
+                    'rgba(239, 68, 68, 0.8)', // Red
+                    'rgba(16, 185, 129, 0.8)' // Green
                 ],
                 borderColor: [
                     '#ef4444',
@@ -93,12 +93,12 @@ function initPieChart() {
     });
 }
 
-// 3. Çubuk Grafik (Departmana Göre Zafiyet)
+// 3. Bar Chart (Vulnerability by Department)
 function initBarChart() {
     const ctx = document.getElementById('barChart').getContext('2d');
     const stats = dashboardData.stats;
 
-    // Gradyan oluşturma
+    // Create gradient
     const gradient = ctx.createLinearGradient(0, 0, 0, 400);
     gradient.addColorStop(0, 'rgba(6, 182, 212, 0.8)'); // Cyan
     gradient.addColorStop(1, 'rgba(59, 130, 246, 0.8)'); // Blue
@@ -108,7 +108,7 @@ function initBarChart() {
         data: {
             labels: stats.deptVulnerability.labels,
             datasets: [{
-                label: 'Zafiyet Oranı (%)',
+                label: 'Vulnerability Rate (%)',
                 data: stats.deptVulnerability.data,
                 backgroundColor: gradient,
                 borderRadius: 6,
@@ -134,7 +134,7 @@ function initBarChart() {
     });
 }
 
-// 4. Çizgi Grafik (Zaman Çizelgesi)
+// 4. Line Chart (Timeline)
 function initTimelineChart() {
     const ctx = document.getElementById('timelineChart').getContext('2d');
     const stats = dashboardData.stats;
@@ -148,12 +148,12 @@ function initTimelineChart() {
         data: {
             labels: stats.timelineData.labels,
             datasets: [{
-                label: 'Linke Tıklayanlar (Kümülatif)',
+                label: 'Link Clicks (Cumulative)',
                 data: stats.timelineData.clicks,
                 borderColor: '#ef4444',
                 backgroundColor: gradientLine,
                 borderWidth: 3,
-                tension: 0.4, // Kavisli çizgi
+                tension: 0.4, // Curved line
                 fill: true
             }]
         },
@@ -176,7 +176,7 @@ function initTimelineChart() {
     });
 }
 
-// 5. Cihaz Dağılımı Grafiği (Ekstra)
+// 5. Device Distribution Chart (Extra)
 function initDeviceChart() {
     const ctx = document.getElementById('deviceChart').getContext('2d');
     const stats = dashboardData.stats;
@@ -209,7 +209,7 @@ function initDeviceChart() {
     });
 }
 
-// 6. Tabloyu Doldur (Son Etkileşimler)
+// 6. Fill Table (Recent Interactions)
 function initTable() {
     const tbody = document.getElementById('targetTableBody');
     tbody.innerHTML = '';
@@ -220,11 +220,11 @@ function initTable() {
 
         let statusBadge = '';
         if (target.status === 'clicked') {
-            statusBadge = '<span class="badge clicked">Tıkladı</span>';
+            statusBadge = '<span class="badge clicked">Clicked</span>';
         } else if (target.status === 'safe') {
-            statusBadge = '<span class="badge safe">Tıklamadı/Raporladı</span>';
+            statusBadge = '<span class="badge safe">Not Clicked/Reported</span>';
         } else {
-            statusBadge = '<span class="badge sent">Gönderildi</span>';
+            statusBadge = '<span class="badge sent">Sent</span>';
         }
 
         tr.innerHTML = `
@@ -245,3 +245,4 @@ function initTable() {
         tbody.appendChild(tr);
     });
 }
+
